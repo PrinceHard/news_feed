@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
-import { Text, useColorScheme, View } from 'react-native';
+import { FlatList, Text, useColorScheme, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { getNewsFeed } from '../../redux/actions';
+import uuid from 'react-native-uuid'
 import styles from './styles';
+import { NewsArticle } from '../../components/NewsArticle';
 
 export const Feed: React.FC = () => {
     const { newsFeed } = useSelector((state: any) => state.feedReducer);
@@ -14,9 +16,13 @@ export const Feed: React.FC = () => {
     const backgroundColor = useColorScheme() === 'dark' ? '#000' : '#fff'
     return(
         <View style={[styles.container, {backgroundColor}]}>
-            {newsFeed?.map((item: any) =>(
-                <Text>{item.title}</Text>
-            ))}
+            <FlatList
+                keyExtractor={() => uuid.v4()?.toString()}
+                showsVerticalScrollIndicator={false}
+                data={newsFeed}
+                renderItem={({item, index}: any) => (
+                    <NewsArticle post={item}/>
+                )}/>
         </View>
     )
 }
